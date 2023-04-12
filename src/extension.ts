@@ -83,6 +83,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             return;
         }
 
+        const textWordCount = userInput.trim().split(/\s+/).length;
+        if (textWordCount > 500) {
+            vscode.window.showWarningMessage('Selected text exceeds maximum limit of 500 words');
+            return;
+        }
+
         const apiUrl = `https://api.betterapi.net/youdotcom/chat?message=${encodeURIComponent(userInput)}&key=site`;
 
         vscode.window.withProgress(
@@ -122,6 +128,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }
 
         const text = editor.document.getText(selection);
+
+        const textWordCount = text.trim().split(/\s+/).length;
+        if (textWordCount > 500) {
+            vscode.window.showWarningMessage('Selected text exceeds maximum limit of 500 words');
+            return;
+        }
+
         const apiEndpoint = `https://api.betterapi.net/youdotcom/chat?message=${encodeURIComponent(
             'refactor this code: ',
         )}${encodeURIComponent(text)}&key=site`;
