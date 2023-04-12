@@ -30,7 +30,7 @@ class LspSession(MethodDispatcher):
     """Send and Receive messages over LSP as a test LS Client."""
 
     def __init__(self, cwd=None, script=None):
-        self.cwd = cwd if cwd else os.getcwd()
+        self.cwd = cwd or os.getcwd()
         # pylint: disable=consider-using-with
         self._thread_pool = ThreadPoolExecutor()
         self._sub = None
@@ -38,9 +38,7 @@ class LspSession(MethodDispatcher):
         self._reader = None
         self._endpoint = None
         self._notification_callbacks = {}
-        self.script = (
-            script if script else (PROJECT_ROOT / "bundled" / "tool" / "lsp_server.py")
-        )
+        self.script = script or PROJECT_ROOT / "bundled" / "tool" / "lsp_server.py"
 
     def __enter__(self):
         """Context manager entrypoint.

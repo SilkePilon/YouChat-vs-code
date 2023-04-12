@@ -84,10 +84,10 @@ class JsonReader:
         return json.loads(content)
 
     def _readline(self):
-        line = self._reader.readline()
-        if not line:
+        if line := self._reader.readline():
+            return line
+        else:
             raise EOFError
-        return line
 
 
 class JsonRpc:

@@ -221,10 +221,8 @@ export const onDidChangePythonInterpreter: Event<IInterpreterDetails> = onDidCha
 
 async function activateExtension() {
     const extension = extensions.getExtension('ms-python.python');
-    if (extension) {
-        if (!extension.isActive) {
-            await extension.activate();
-        }
+    if (extension && !extension.isActive) {
+          await extension.activate();
     }
     return extension;
 }

@@ -81,7 +81,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 try {
                     const response = await fetch(apiUrl);
                     const json = (await response.json()) as { message: string };
-                    const message = json.message;
+                    const {message} = json;
                     const copyAction = { title: 'Copy code' };
                     vscode.window.showInformationMessage(message, copyAction).then((selection) => {
                         if (selection === copyAction) {
@@ -111,7 +111,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             return;
         }
 
-        const selection = editor.selection;
+        const {selection} = editor;
         if (selection.isEmpty) {
             vscode.window.showErrorMessage('No text selected');
             return;
@@ -141,7 +141,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 try {
                     const response = await fetch(apiEndpoint);
                     const json = (await response.json()) as { message: string };
-                    const message = json.message;
+                    const {message} = json;
                     const copyAction = { title: 'Copy code' };
                     vscode.window.showInformationMessage(message, copyAction).then((selection) => {
                         if (selection === copyAction) {
