@@ -1,22 +1,23 @@
 {
-    "name": "<pytool-module>",
-    "displayName": "<pytool-display-name>",
-    "description": "Linting support for python files using `<pytool-module>`.",
-    "version": "2022.0.0-dev",
+    "name": "youchat",
+    "displayName": "YouChat",
+    "description": "Extension that allows you to use You.com's YouChat inside VSCode (unofficial)",
+    "icon": "images/youchat.png",
+    "version": "0.0.1",
     "preview": true,
     "serverInfo": {
-        "name": "<pytool-display-name>",
-        "module": "<pytool-module>"
+        "name": "YouChat",
+        "module": "youchat"
     },
-    "publisher": "<my-publisher>",
+    "publisher": "SilkePilon",
     "license": "MIT",
-    "homepage": "https://github.com/<my-github>/<my-extension-project>",
+    "homepage": "https://github.com/SilkePilon/YouChat-vs-code",
     "repository": {
         "type": "git",
-        "url": "https://github.com/<my-github>/<my-extension-project>.git"
+        "url": "https://github.com/SilkePilon/YouChat-vs-code.git"
     },
     "bugs": {
-        "url": "https://github.com/<my-github>/<my-extension-project>/issues"
+        "url": "https://github.com/SilkePilon/YouChat-vs-code/issues"
     },
     "galleryBanner": {
         "color": "#1e415e",
@@ -24,7 +25,9 @@
     },
     "keywords": [
         "python",
-        "<pytool-module>"
+        "youchat",
+        "AI",
+        "you.com"
     ],
     "engines": {
         "vscode": "^1.75.0"
@@ -53,12 +56,19 @@
         "lint": "eslint src --ext ts",
         "format-check": "prettier --check 'src/**/*.ts' 'build/**/*.yml' '.github/**/*.yml'",
         "test": "node ./out/test/runTest.js",
-        "vsce-package": "vsce package -o <pytool-module>.vsix"
+        "vsce-package": "vsce package -o youchat.vsix"
     },
     "contributes": {
+        "menus": {
+            "editor/context": [{
+                "when": "editorHasSelection",
+                "command": "youchat.sendSelectedTextToAPICommand",
+                "group": "navigation"
+            }]
+        },
         "configuration": {
             "properties": {
-                "<pytool-module>.args": {
+                "youchat.args": {
                     "default": [],
                     "description": "Arguments passed in. Each argument is a separate item in the array.",
                     "items": {
@@ -67,30 +77,30 @@
                     "scope": "resource",
                     "type": "array"
                 },
-                "<pytool-module>.path": {
+                "youchat.path": {
                     "default": [],
-                    "description": "When set to a path to <pytool-module> binary, extension will use that. NOTE: Using this option may slowdown server response time.",
+                    "description": "When set to a path to youchat binary, extension will use that. NOTE: Using this option may slowdown server response time.",
                     "scope": "resource",
                     "items": {
                         "type": "string"
                     },
                     "type": "array"
                 },
-                "<pytool-module>.importStrategy": {
+                "youchat.importStrategy": {
                     "default": "fromEnvironment",
-                    "description": "Defines where `<pytool-module>` is imported from. This setting may be ignored if `<pytool-module>.path` is set.",
+                    "description": "Defines where `youchat` is imported from. This setting may be ignored if `youchat.path` is set.",
                     "enum": [
                         "useBundled",
                         "fromEnvironment"
                     ],
                     "enumDescriptions": [
-                        "Always use the bundled version of `<pytool-module>`.",
-                        "Use `<pytool-module>` from environment, fallback to bundled version only if `<pytool-module>` not available in the environment."
+                        "Always use the bundled version of `youchat`.",
+                        "Use `youchat` from environment, fallback to bundled version only if `youchat` not available in the environment."
                     ],
                     "scope": "window",
                     "type": "string"
                 },
-                "<pytool-module>.interpreter": {
+                "youchat.interpreter": {
                     "default": [],
                     "description": "When set to a path to python executable, extension will use that to launch the server and any subprocess.",
                     "scope": "window",
@@ -99,7 +109,7 @@
                     },
                     "type": "array"
                 },
-                "<pytool-module>.showNotifications": {
+                "youchat.showNotifications": {
                     "default": "off",
                     "description": "Controls when notifications are shown by this extension.",
                     "enum": [
@@ -119,33 +129,39 @@
                 }
             }
         },
-        "commands": [
+        "commands": [{
+                "title": "Talk to YouChat",
+                "category": "YouChat",
+                "command": "youchat.ask"
+            },
             {
-                "title": "Restart Server",
-                "category": "<pytool-display-name>",
-                "command": "<pytool-module>.restart"
+                "title": "Let YouChat refactor selected",
+                "category": "YouChat",
+                "command": "youchat.sendSelectedTextToAPICommand"
             }
         ]
     },
     "dependencies": {
         "fs-extra": "^11.1.0",
+        "node-fetch": "^3.3.1",
         "vscode-languageclient": "^8.1.0"
     },
     "devDependencies": {
         "@types/fs-extra": "^11.0.1",
-        "@types/vscode": "1.75.0",
         "@types/glob": "^8.1.0",
         "@types/node": "14.x",
+        "@types/vscode": "1.75.0",
         "@typescript-eslint/eslint-plugin": "^5.54.0",
         "@typescript-eslint/parser": "^5.54.0",
         "@vscode/test-electron": "^2.3.0",
         "eslint": "^8.35.0",
         "glob": "^9.1.0",
         "prettier": "^2.8.4",
-        "typescript": "^4.9.5",
+        "tailwindcss": "^3.3.1",
         "ts-loader": "^9.4.2",
+        "typescript": "^4.9.5",
+        "vsce": "^1.97.0",
         "webpack": "^5.76.0",
-        "webpack-cli": "^5.0.1",
-        "vsce": "^2.15.0"
+        "webpack-cli": "^5.0.1"
     }
 }

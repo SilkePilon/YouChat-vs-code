@@ -16,6 +16,7 @@ import { checkIfConfigurationChanged, getInterpreterFromSetting } from './common
 import { loadServerDefaults } from './common/setup';
 import { getLSClientTraceLevel } from './common/utilities';
 import { createOutputChannel, onDidChangeConfiguration, registerCommand } from './common/vscodeapi';
+import fetch from 'node-fetch';
 
 let lsClient: LanguageClient | undefined;
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
@@ -71,6 +72,83 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         );
     };
 
+    const ask = async () => {
+        const userInput = await vscode.window.showInputBox({
+            prompt: 'Enter a message to send to the BetterAPI:',
+            value: '',
+        });
+
+        if (userInput === undefined) {
+            // User canceled input, do nothing
+            return;
+        }
+
+        const apiUrl = `https://api.betterapi.net/youdotcom/chat?message=${encodeURIComponent(userInput)}&key=site`;
+
+        vscode.window.withProgress(
+            {
+                location: vscode.ProgressLocation.Notification,
+                title: 'YouChat: Please wait...',
+                cancellable: false,
+            },
+            async (progress) => {
+                progress.report({ increment: 0 });
+                try {
+                    const response = await fetch(apiUrl);
+                    const json = (await response.json()) as { message: string };
+                    const message = json.message;
+                    vscode.window.showInformationMessage(message);
+                    progress.report({ increment: 100, message: 'API request successful' });
+                } catch (error) {
+                    vscode.window.showErrorMessage((error as Error).message);
+                    progress.report({ increment: 100, message: 'API request failed' });
+                }
+            },
+        );
+    };
+
+    // Command to send selected text to the API
+    const sendSelectedTextToAPICommand = async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showErrorMessage('No active editor found');
+            return;
+        }
+
+        const selection = editor.selection;
+        if (selection.isEmpty) {
+            vscode.window.showErrorMessage('No text selected');
+            return;
+        }
+
+        const text = editor.document.getText(selection);
+        const apiEndpoint = `https://api.betterapi.net/youdotcom/chat?message=${encodeURIComponent(
+            'refactor this code: ',
+        )}${encodeURIComponent(text)}&key=site`;
+
+        // Show progress notification while waiting for API response
+        vscode.window.withProgress(
+            {
+                location: vscode.ProgressLocation.Notification,
+                title: 'YouChat: Please wait...',
+                cancellable: false,
+            },
+            async (progress) => {
+                progress.report({ increment: 0 });
+                try {
+                    const response = await fetch(apiEndpoint);
+                    const json = (await response.json()) as { message: string };
+                    const message = json.message;
+                    vscode.window.showInformationMessage(message);
+                    progress.report({ increment: 100, message: 'API request successful' });
+                } catch (error) {
+                    vscode.window.showErrorMessage((error as Error).message);
+                    progress.report({ increment: 100, message: 'API request failed' });
+                }
+            },
+        );
+    };
+
     context.subscriptions.push(
         onDidChangePythonInterpreter(async () => {
             await runServer();
@@ -82,6 +160,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }),
         registerCommand(`${serverId}.restart`, async () => {
             await runServer();
+        }),
+        registerCommand(`${serverId}.ask`, async () => {
+            await ask();
+        }),
+        registerCommand(`${serverId}.sendSelectedTextToAPICommand`, async () => {
+            await sendSelectedTextToAPICommand();
         }),
     );
 
