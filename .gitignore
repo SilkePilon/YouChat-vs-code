@@ -11,3 +11,4 @@ bundled/libs/
 **/.pytest_cache
 **/.vs
 publish.sh
+publish.bat

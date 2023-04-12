@@ -3,7 +3,7 @@
     "displayName": "YouChat",
     "description": "Extension that allows you to use You.com's YouChat inside VSCode (unofficial)",
     "icon": "images/youchat.png",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "preview": true,
     "serverInfo": {
         "name": "YouChat",
@@ -34,7 +34,7 @@
     },
     "categories": [
         "Programming Languages",
-        "AI"
+        "Machine Learning"
     ],
     "extensionDependencies": [
         "ms-python.python"
