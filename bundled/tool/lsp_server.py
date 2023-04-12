@@ -48,7 +48,9 @@ RUNNER = pathlib.Path(__file__).parent / "lsp_runner.py"
 MAX_WORKERS = 5
 # TODO: Update the language server name and version.
 LSP_SERVER = server.LanguageServer(
-    name="<pytool-display-name>", version="<server version>", max_workers=MAX_WORKERS,
+    name="<pytool-display-name>",
+    version="<server version>",
+    max_workers=MAX_WORKERS,
 )
 
 
@@ -282,7 +284,7 @@ def on_shutdown(_params: Any | None = None) -> None:
     jsonrpc.shutdown_json_rpc()
 
 
-def _get_global_defaults():
+def _get_global_defaults() -> dict[str, Any]:
     return {
         "path": GLOBAL_SETTINGS.get("path", []),
         "interpreter": GLOBAL_SETTINGS.get("interpreter", [sys.executable]),
@@ -292,7 +294,7 @@ def _get_global_defaults():
     }
 
 
-def _update_workspace_settings(settings):
+def _update_workspace_settings(settings: list[dict[str, Any]] | None) -> None:
     if not settings:
         key = os.getcwd()
         WORKSPACE_SETTINGS[key] = {
@@ -311,7 +313,7 @@ def _update_workspace_settings(settings):
         }
 
 
-def _get_settings_by_path(file_path: pathlib.Path):
+def _get_settings_by_path(file_path: pathlib.Path) -> dict[str, Any]:
     workspaces = {s["workspaceFS"] for s in WORKSPACE_SETTINGS.values()}
 
     while file_path != file_path.parent:
@@ -324,7 +326,7 @@ def _get_settings_by_path(file_path: pathlib.Path):
     return setting_values[0]
 
 
-def _get_document_key(document: workspace.Document):
+def _get_document_key(document: workspace.Document) -> str | None:
     if WORKSPACE_SETTINGS:
         document_workspace = pathlib.Path(document.path)
         workspaces = {s["workspaceFS"] for s in WORKSPACE_SETTINGS.values()}
@@ -338,7 +340,7 @@ def _get_document_key(document: workspace.Document):
     return None
 
 
-def _get_settings_by_document(document: workspace.Document | None):
+def _get_settings_by_document(document: workspace.Document | None) -> dict[str, Any]:
     if document is None or document.path is None:
         return list(WORKSPACE_SETTINGS.values())[0]
 
@@ -359,7 +361,11 @@ def _get_settings_by_document(document: workspace.Document | None):
 # *****************************************************
 # Internal execution APIs.
 # *****************************************************
-def _run_tool_on_document(document: workspace.Document, use_stdin: bool = False, extra_args: Sequence[str] = None) -> utils.RunResult | None:
+def _run_tool_on_document(
+    document: workspace.Document,
+    use_stdin: bool = False,
+    extra_args: Sequence[str] = None,
+) -> utils.RunResult | None:
     """Runs tool on the given document.
 
     if use_stdin is true then contents of the document is passed to the
@@ -403,16 +409,16 @@ def _run_tool_on_document(document: workspace.Document, use_stdin: bool = False,
 
     argv += TOOL_ARGS + settings["args"] + extra_args
 
-        # TODO: update these to pass the appropriate arguments to provide document contents
-        # to tool via stdin.
-        # For example, for pylint args for stdin looks like this:
-        #     pylint --from-stdin <path>
-        # Here `--from-stdin` path is used by pylint to make decisions on the file contents
-        # that are being processed. Like, applying exclusion rules.
-        # It should look like this when you pass it:
-        #     argv += ["--from-stdin", document.path]
-        # Read up on how your tool handles contents via stdin. If stdin is not supported use
-        # set use_stdin to False, or provide path, what ever is appropriate for your tool.
+    # TODO: update these to pass the appropriate arguments to provide document contents
+    # to tool via stdin.
+    # For example, for pylint args for stdin looks like this:
+    #     pylint --from-stdin <path>
+    # Here `--from-stdin` path is used by pylint to make decisions on the file contents
+    # that are being processed. Like, applying exclusion rules.
+    # It should look like this when you pass it:
+    #     argv += ["--from-stdin", document.path]
+    # Read up on how your tool handles contents via stdin. If stdin is not supported use
+    # set use_stdin to False, or provide path, what ever is appropriate for your tool.
     argv += [] if use_stdin else [document.path]
     if use_path:
         # This mode is used when running executables.
@@ -543,7 +549,10 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
                 # handles changing working directories, managing io streams, etc.
                 # Also update `_run_tool_on_document` function and `utils.run_module` in `lsp_runner.py`.
                 result = utils.run_module(
-                    module=TOOL_MODULE, argv=argv, use_stdin=True, cwd=cwd,
+                    module=TOOL_MODULE,
+                    argv=argv,
+                    use_stdin=True,
+                    cwd=cwd,
                 )
             except Exception:
                 log_error(traceback.format_exc(chain=True))
@@ -559,7 +568,8 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
 # Logging and notification.
 # *****************************************************
 def log_to_output(
-    message: str, msg_type: lsp.MessageType = lsp.MessageType.Log,
+    message: str,
+    msg_type: lsp.MessageType = lsp.MessageType.Log,
 ) -> None:
     LSP_SERVER.show_message_log(message, msg_type)
 

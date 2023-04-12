@@ -60,8 +60,7 @@ def get_initialization_options():
 
     properties = package_json["contributes"]["configuration"]["properties"]
     setting = {
-        prop[len(server_id) + 1 :]: properties[prop]["default"]
-        for prop in properties
+        prop[len(server_id) + 1 :]: properties[prop]["default"] for prop in properties
     }
     setting["workspace"] = as_uri(str(PROJECT_ROOT))
     setting["interpreter"] = []

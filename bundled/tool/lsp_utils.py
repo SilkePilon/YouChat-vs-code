@@ -28,25 +28,23 @@ def as_list(content: Any | list[Any] | tuple[Any]) -> list[Any] | tuple[Any]:
 # pylint: disable-next=consider-using-generator
 _site_paths = tuple(
     os.path.normcase(os.path.normpath(p))
-    for p in (
-        as_list(site.getsitepackages()) + as_list(site.getusersitepackages())
-    )
+    for p in (as_list(site.getsitepackages()) + as_list(site.getusersitepackages()))
 )
 
 
-def is_same_path(file_path1, file_path2) -> bool:
+def is_same_path(file_path1: str, file_path2: str) -> bool:
     """Returns true if two paths are the same."""
     return os.path.normcase(os.path.normpath(file_path1)) == os.path.normcase(
         os.path.normpath(file_path2),
     )
 
 
-def is_current_interpreter(executable) -> bool:
+def is_current_interpreter(executable: str) -> bool:
     """Returns true if the executable path is same as the current interpreter."""
     return is_same_path(executable, sys.executable)
 
 
-def is_stdlib_file(file_path) -> bool:
+def is_stdlib_file(file_path: str) -> bool:
     """Return True if the file belongs to standard library."""
     return os.path.normcase(os.path.normpath(file_path)).startswith(_site_paths)
 
@@ -65,7 +63,12 @@ class CustomIO(io.TextIOWrapper):
 
     name = None
 
-    def __init__(self, name, encoding="utf-8", newline=None) -> None:
+    def __init__(
+        self,
+        name: str,
+        encoding: str = "utf-8",
+        newline: str | None = None,
+    ) -> None:
         self._buffer = io.BytesIO()
         self._buffer.name = name
         super().__init__(self._buffer, encoding=encoding, newline=newline)
@@ -107,7 +110,10 @@ def change_cwd(new_cwd):
 
 
 def _run_module(
-    module: str, argv: Sequence[str], use_stdin: bool, source: str = None,
+    module: str,
+    argv: Sequence[str],
+    use_stdin: bool,
+    source: str = None,
 ) -> RunResult:
     """Runs as a module."""
     str_output = CustomIO("<stdout>", encoding="utf-8")
@@ -128,7 +134,11 @@ def _run_module(
 
 
 def run_module(
-    module: str, argv: Sequence[str], use_stdin: bool, cwd: str, source: str = None,
+    module: str,
+    argv: Sequence[str],
+    use_stdin: bool,
+    cwd: str,
+    source: str = None,
 ) -> RunResult:
     """Runs as a module."""
     with CWD_LOCK:
@@ -139,7 +149,10 @@ def run_module(
 
 
 def run_path(
-    argv: Sequence[str], use_stdin: bool, cwd: str, source: str = None,
+    argv: Sequence[str],
+    use_stdin: bool,
+    cwd: str,
+    source: str = None,
 ) -> RunResult:
     """Runs as an executable."""
     if use_stdin:

@@ -152,7 +152,8 @@ class LspSession(MethodDispatcher):
     def code_action_resolve(self, code_action_resolve_params):
         """Sends text document code actions resolve request to LSP server."""
         fut = self._send_request(
-            "codeAction/resolve", params=code_action_resolve_params,
+            "codeAction/resolve",
+            params=code_action_resolve_params,
         )
         return fut.result()
 
@@ -175,7 +176,8 @@ class LspSession(MethodDispatcher):
     def _publish_diagnostics(self, publish_diagnostics_params):
         """Internal handler for text document publish diagnostics."""
         return self._handle_notification(
-            PUBLISH_DIAGNOSTICS, publish_diagnostics_params,
+            PUBLISH_DIAGNOSTICS,
+            publish_diagnostics_params,
         )
 
     def _window_log_message(self, window_log_message_params):
@@ -185,7 +187,8 @@ class LspSession(MethodDispatcher):
     def _window_show_message(self, window_show_message_params):
         """Internal handler for window show message."""
         return self._handle_notification(
-            WINDOW_SHOW_MESSAGE, window_show_message_params,
+            WINDOW_SHOW_MESSAGE,
+            window_show_message_params,
         )
 
     def _handle_notification(self, notification_name, params):
