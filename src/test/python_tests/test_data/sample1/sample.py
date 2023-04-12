@@ -1,3 +1,1 @@
-import sys
-
 print(x)

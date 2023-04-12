@@ -9,9 +9,9 @@ import os
 import pathlib
 import re
 import sys
-import sysconfig
 import traceback
-from typing import Any, Optional, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 
 # **********************************************************
@@ -48,7 +48,9 @@ RUNNER = pathlib.Path(__file__).parent / "lsp_runner.py"
 MAX_WORKERS = 5
 # TODO: Update the language server name and version.
 LSP_SERVER = server.LanguageServer(
-    name="<pytool-display-name>", version="<server version>", max_workers=MAX_WORKERS
+    name="<pytool-display-name>",
+    version="<server version>",
+    max_workers=MAX_WORKERS,
 )
 
 
@@ -146,8 +148,7 @@ def _parse_output_using_regex(content: str) -> list[lsp.Diagnostic]:
     for line in lines:
         if line.startswith("'") and line.endswith("'"):
             line = line[1:-1]
-        match = DIAGNOSTIC_RE.match(line)
-        if match:
+        if match := DIAGNOSTIC_RE.match(line):
             data = match.groupdict()
             position = lsp.Position(
                 line=max([int(data["line"]) - line_offset, 0]),
@@ -201,13 +202,9 @@ def formatting(params: lsp.DocumentFormattingParams) -> list[lsp.TextEdit] | Non
     # objects, to provide your formatted results.
 
     document = LSP_SERVER.workspace.get_document(params.text_document.uri)
-    edits = _formatting_helper(document)
-    if edits:
-        return edits
-
     # NOTE: If you provide [] array, VS Code will clear the file of all contents.
     # To indicate no changes to file return None.
-    return None
+    return edits if (edits := _formatting_helper(document)) else None
 
 
 def _formatting_helper(document: workspace.Document) -> list[lsp.TextEdit] | None:
@@ -225,7 +222,7 @@ def _formatting_helper(document: workspace.Document) -> list[lsp.TextEdit] | Non
                     end=lsp.Position(line=len(document.lines), character=0),
                 ),
                 new_text=new_source,
-            )
+            ),
         ]
     return None
 
@@ -233,9 +230,7 @@ def _formatting_helper(document: workspace.Document) -> list[lsp.TextEdit] | Non
 def _get_line_endings(lines: list[str]) -> str:
     """Returns line endings used in the text."""
     try:
-        if lines[0][-2:] == "\r\n":
-            return "\r\n"
-        return "\n"
+        return "\r\n" if lines[0][-2:] == "\r\n" else "\n"
     except Exception:  # pylint: disable=broad-except
         return None
 
@@ -270,26 +265,26 @@ def initialize(params: lsp.InitializeParams) -> None:
     settings = params.initialization_options["settings"]
     _update_workspace_settings(settings)
     log_to_output(
-        f"Settings used to run Server:\r\n{json.dumps(settings, indent=4, ensure_ascii=False)}\r\n"
+        f"Settings used to run Server:\r\n{json.dumps(settings, indent=4, ensure_ascii=False)}\r\n",
     )
     log_to_output(
-        f"Global settings:\r\n{json.dumps(GLOBAL_SETTINGS, indent=4, ensure_ascii=False)}\r\n"
+        f"Global settings:\r\n{json.dumps(GLOBAL_SETTINGS, indent=4, ensure_ascii=False)}\r\n",
     )
 
 
 @LSP_SERVER.feature(lsp.EXIT)
-def on_exit(_params: Optional[Any] = None) -> None:
+def on_exit(_params: Any | None = None) -> None:
     """Handle clean up on exit."""
     jsonrpc.shutdown_json_rpc()
 
 
 @LSP_SERVER.feature(lsp.SHUTDOWN)
-def on_shutdown(_params: Optional[Any] = None) -> None:
+def on_shutdown(_params: Any | None = None) -> None:
     """Handle clean up on shutdown."""
     jsonrpc.shutdown_json_rpc()
 
 
-def _get_global_defaults():
+def _get_global_defaults() -> dict[str, Any]:
     return {
         "path": GLOBAL_SETTINGS.get("path", []),
         "interpreter": GLOBAL_SETTINGS.get("interpreter", [sys.executable]),
@@ -299,7 +294,7 @@ def _get_global_defaults():
     }
 
 
-def _update_workspace_settings(settings):
+def _update_workspace_settings(settings: list[dict[str, Any]] | None) -> None:
     if not settings:
         key = os.getcwd()
         WORKSPACE_SETTINGS[key] = {
@@ -318,7 +313,7 @@ def _update_workspace_settings(settings):
         }
 
 
-def _get_settings_by_path(file_path: pathlib.Path):
+def _get_settings_by_path(file_path: pathlib.Path) -> dict[str, Any]:
     workspaces = {s["workspaceFS"] for s in WORKSPACE_SETTINGS.values()}
 
     while file_path != file_path.parent:
@@ -331,7 +326,7 @@ def _get_settings_by_path(file_path: pathlib.Path):
     return setting_values[0]
 
 
-def _get_document_key(document: workspace.Document):
+def _get_document_key(document: workspace.Document) -> str | None:
     if WORKSPACE_SETTINGS:
         document_workspace = pathlib.Path(document.path)
         workspaces = {s["workspaceFS"] for s in WORKSPACE_SETTINGS.values()}
@@ -345,7 +340,7 @@ def _get_document_key(document: workspace.Document):
     return None
 
 
-def _get_settings_by_document(document: workspace.Document | None):
+def _get_settings_by_document(document: workspace.Document | None) -> dict[str, Any]:
     if document is None or document.path is None:
         return list(WORKSPACE_SETTINGS.values())[0]
 
@@ -369,13 +364,15 @@ def _get_settings_by_document(document: workspace.Document | None):
 def _run_tool_on_document(
     document: workspace.Document,
     use_stdin: bool = False,
-    extra_args: Sequence[str] = [],
+    extra_args: Sequence[str] = None,
 ) -> utils.RunResult | None:
     """Runs tool on the given document.
 
     if use_stdin is true then contents of the document is passed to the
     tool via stdin.
     """
+    if extra_args is None:
+        extra_args = []
     if str(document.uri).startswith("vscode-notebook-cell"):
         # TODO: Decide on if you want to skip notebook cells.
         # Skip notebook cells
@@ -399,7 +396,7 @@ def _run_tool_on_document(
         use_path = True
         argv = settings["path"]
     elif settings["interpreter"] and not utils.is_current_interpreter(
-        settings["interpreter"][0]
+        settings["interpreter"][0],
     ):
         # If there is a different interpreter set use JSON-RPC to the subprocess
         # running under that interpreter.
@@ -412,21 +409,17 @@ def _run_tool_on_document(
 
     argv += TOOL_ARGS + settings["args"] + extra_args
 
-    if use_stdin:
-        # TODO: update these to pass the appropriate arguments to provide document contents
-        # to tool via stdin.
-        # For example, for pylint args for stdin looks like this:
-        #     pylint --from-stdin <path>
-        # Here `--from-stdin` path is used by pylint to make decisions on the file contents
-        # that are being processed. Like, applying exclusion rules.
-        # It should look like this when you pass it:
-        #     argv += ["--from-stdin", document.path]
-        # Read up on how your tool handles contents via stdin. If stdin is not supported use
-        # set use_stdin to False, or provide path, what ever is appropriate for your tool.
-        argv += []
-    else:
-        argv += [document.path]
-
+    # TODO: update these to pass the appropriate arguments to provide document contents
+    # to tool via stdin.
+    # For example, for pylint args for stdin looks like this:
+    #     pylint --from-stdin <path>
+    # Here `--from-stdin` path is used by pylint to make decisions on the file contents
+    # that are being processed. Like, applying exclusion rules.
+    # It should look like this when you pass it:
+    #     argv += ["--from-stdin", document.path]
+    # Read up on how your tool handles contents via stdin. If stdin is not supported use
+    # set use_stdin to False, or provide path, what ever is appropriate for your tool.
+    argv += [] if use_stdin else [document.path]
     if use_path:
         # This mode is used when running executables.
         log_to_output(" ".join(argv))
@@ -461,7 +454,7 @@ def _run_tool_on_document(
             log_to_output(result.stderr)
     else:
         # In this mode the tool is run as a module in the same process as the language server.
-        log_to_output(" ".join([sys.executable, "-m"] + argv))
+        log_to_output(" ".join([sys.executable, "-m", *argv]))
         log_to_output(f"CWD Linter: {cwd}")
         # This is needed to preserve sys.path, in cases where the tool modifies
         # sys.path and that might not work for this scenario next time around.
@@ -504,7 +497,7 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
         use_path = True
         argv = settings["path"]
     elif len(settings["interpreter"]) > 0 and not utils.is_current_interpreter(
-        settings["interpreter"][0]
+        settings["interpreter"][0],
     ):
         # If there is a different interpreter set use JSON-RPC to the subprocess
         # running under that interpreter.
@@ -544,7 +537,7 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
             log_to_output(result.stderr)
     else:
         # In this mode the tool is run as a module in the same process as the language server.
-        log_to_output(" ".join([sys.executable, "-m"] + argv))
+        log_to_output(" ".join([sys.executable, "-m", *argv]))
         log_to_output(f"CWD Linter: {cwd}")
         # This is needed to preserve sys.path, in cases where the tool modifies
         # sys.path and that might not work for this scenario next time around.
@@ -556,7 +549,10 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
                 # handles changing working directories, managing io streams, etc.
                 # Also update `_run_tool_on_document` function and `utils.run_module` in `lsp_runner.py`.
                 result = utils.run_module(
-                    module=TOOL_MODULE, argv=argv, use_stdin=True, cwd=cwd
+                    module=TOOL_MODULE,
+                    argv=argv,
+                    use_stdin=True,
+                    cwd=cwd,
                 )
             except Exception:
                 log_error(traceback.format_exc(chain=True))
@@ -572,7 +568,8 @@ def _run_tool(extra_args: Sequence[str]) -> utils.RunResult:
 # Logging and notification.
 # *****************************************************
 def log_to_output(
-    message: str, msg_type: lsp.MessageType = lsp.MessageType.Log
+    message: str,
+    msg_type: lsp.MessageType = lsp.MessageType.Log,
 ) -> None:
     LSP_SERVER.show_message_log(message, msg_type)
 

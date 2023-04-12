@@ -31,8 +31,7 @@ export function getLSClientTraceLevel(channelLogLevel: LogLevel, globalLogLevel:
     if (globalLogLevel === LogLevel.Off) {
         return logLevelToTrace(channelLogLevel);
     }
-    const level = logLevelToTrace(channelLogLevel <= globalLogLevel ? channelLogLevel : globalLogLevel);
-    return level;
+    return logLevelToTrace(channelLogLevel <= globalLogLevel ? channelLogLevel : globalLogLevel);
 }
 
 export async function getProjectRoot(): Promise<WorkspaceFolder> {

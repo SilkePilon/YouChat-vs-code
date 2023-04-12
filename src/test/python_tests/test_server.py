@@ -40,8 +40,8 @@ def test_linting_example():
                     "languageId": "python",
                     "version": 1,
                     "text": contents,
-                }
-            }
+                },
+            },
         )
 
         # wait for some time to receive all notifications
@@ -114,15 +114,15 @@ def test_formatting_example():
                         "languageId": "python",
                         "version": 1,
                         "text": contents,
-                    }
-                }
+                    },
+                },
             )
             actual = ls_session.text_document_formatting(
                 {
                     "textDocument": {"uri": uri},
                     # `options` is not used by black
                     "options": {"tabSize": 4, "insertSpaces": True},
-                }
+                },
             )
 
     expected = [
@@ -132,7 +132,7 @@ def test_formatting_example():
                 "end": {"line": len(lines), "character": 0},
             },
             "newText": FORMATTED_TEST_FILE_PATH.read_text(),
-        }
+        },
     ]
 
     assert_that(actual, is_(expected))

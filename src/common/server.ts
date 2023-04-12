@@ -27,7 +27,7 @@ async function createServer(
     initializationOptions: IInitOptions,
 ): Promise<LanguageClient> {
     const command = settings.interpreter[0];
-    const cwd = settings.cwd;
+    const {cwd} = settings;
 
     // Set debugger path needed for debugging python code.
     const newEnv = { ...process.env };

@@ -14,9 +14,7 @@ from .constants import PROJECT_ROOT
 
 def normalizecase(path: str) -> str:
     """Fixes 'file' uri or path case for easier testing in windows."""
-    if platform.system() == "Windows":
-        return path.lower()
-    return path
+    return path.lower() if platform.system() == "Windows" else path
 
 
 def as_uri(path: str) -> str:
@@ -27,7 +25,7 @@ def as_uri(path: str) -> str:
 class PythonFile:
     """Create python file on demand for testing."""
 
-    def __init__(self, contents, root):
+    def __init__(self, contents, root) -> None:
         self.contents = contents
         self.basename = "".join(
             choice("abcdefghijklmnopqrstuvwxyz") if i < 8 else ".py" for i in range(9)
@@ -61,12 +59,9 @@ def get_initialization_options():
     server_id = server_info["module"]
 
     properties = package_json["contributes"]["configuration"]["properties"]
-    setting = {}
-    for prop in properties:
-        name = prop[len(server_id) + 1 :]
-        value = properties[prop]["default"]
-        setting[name] = value
-
+    setting = {
+        prop[len(server_id) + 1 :]: properties[prop]["default"] for prop in properties
+    }
     setting["workspace"] = as_uri(str(PROJECT_ROOT))
     setting["interpreter"] = []
 

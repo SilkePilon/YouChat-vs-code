@@ -47,16 +47,15 @@ export async function getWorkspaceSettings(
         }
     }
 
-    const workspaceSetting = {
-        cwd: workspace.uri.fsPath,
-        workspace: workspace.uri.toString(),
-        args: config.get<string[]>(`args`) ?? [],
-        path: config.get<string[]>(`path`) ?? [],
-        interpreter: interpreter ?? [],
-        importStrategy: config.get<string>(`importStrategy`) ?? 'fromEnvironment',
-        showNotifications: config.get<string>(`showNotifications`) ?? 'off',
-    };
-    return workspaceSetting;
+    return {
+            cwd: workspace.uri.fsPath,
+            workspace: workspace.uri.toString(),
+            args: config.get<string[]>(`args`) ?? [],
+            path: config.get<string[]>(`path`) ?? [],
+            interpreter: interpreter ?? [],
+            importStrategy: config.get<string>(`importStrategy`) ?? 'fromEnvironment',
+            showNotifications: config.get<string>(`showNotifications`) ?? 'off',
+        };
 }
 
 function getGlobalValue<T>(config: WorkspaceConfiguration, key: string, defaultValue: T): T {
@@ -75,16 +74,15 @@ export async function getGlobalSettings(namespace: string, includeInterpreter?: 
         }
     }
 
-    const setting = {
-        cwd: process.cwd(),
-        workspace: process.cwd(),
-        args: getGlobalValue<string[]>(config, 'args', []),
-        path: getGlobalValue<string[]>(config, 'path', []),
-        interpreter: interpreter ?? [],
-        importStrategy: getGlobalValue<string>(config, 'importStrategy', 'fromEnvironment'),
-        showNotifications: getGlobalValue<string>(config, 'showNotifications', 'off'),
-    };
-    return setting;
+    return {
+            cwd: process.cwd(),
+            workspace: process.cwd(),
+            args: getGlobalValue<string[]>(config, 'args', []),
+            path: getGlobalValue<string[]>(config, 'path', []),
+            interpreter: interpreter ?? [],
+            importStrategy: getGlobalValue<string>(config, 'importStrategy', 'fromEnvironment'),
+            showNotifications: getGlobalValue<string>(config, 'showNotifications', 'off'),
+        };
 }
 
 export function checkIfConfigurationChanged(e: ConfigurationChangeEvent, namespace: string): boolean {

@@ -54,7 +54,7 @@ VSCODE_DEFAULT_INITIALIZE = {
                         24,
                         25,
                         26,
-                    ]
+                    ],
                 },
                 "tagSupport": {"valueSet": [1]},
             },
@@ -114,7 +114,7 @@ VSCODE_DEFAULT_INITIALIZE = {
                         23,
                         24,
                         25,
-                    ]
+                    ],
                 },
             },
             "hover": {
@@ -162,7 +162,7 @@ VSCODE_DEFAULT_INITIALIZE = {
                         24,
                         25,
                         26,
-                    ]
+                    ],
                 },
                 "hierarchicalDocumentSymbolSupport": True,
                 "tagSupport": {"valueSet": [1]},
@@ -181,8 +181,8 @@ VSCODE_DEFAULT_INITIALIZE = {
                             "refactor.rewrite",
                             "source",
                             "source.organizeImports",
-                        ]
-                    }
+                        ],
+                    },
                 },
             },
             "codeLens": {"dynamicRegistration": True},
