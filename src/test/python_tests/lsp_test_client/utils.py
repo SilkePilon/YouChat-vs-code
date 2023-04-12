@@ -25,7 +25,7 @@ def as_uri(path: str) -> str:
 class PythonFile:
     """Create python file on demand for testing."""
 
-    def __init__(self, contents, root):
+    def __init__(self, contents, root) -> None:
         self.contents = contents
         self.basename = "".join(
             choice("abcdefghijklmnopqrstuvwxyz") if i < 8 else ".py" for i in range(9)

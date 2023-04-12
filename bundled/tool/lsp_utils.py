@@ -12,16 +12,17 @@ import site
 import subprocess
 import sys
 import threading
-from typing import Any, Callable, List, Sequence, Tuple, Union
+from collections.abc import Callable, Sequence
+from typing import Any
 
 # Save the working directory used when loading this module
 SERVER_CWD = os.getcwd()
 CWD_LOCK = threading.Lock()
 
 
-def as_list(content: Union[Any, List[Any], Tuple[Any]]) -> Union[List[Any], Tuple[Any]]:
+def as_list(content: Any | list[Any] | tuple[Any]) -> list[Any] | tuple[Any]:
     """Ensures we always get a list"""
-    return content if isinstance(content, (list, tuple)) else [content]
+    return content if isinstance(content, list | tuple) else [content]
 
 
 # pylint: disable-next=consider-using-generator
@@ -36,7 +37,7 @@ _site_paths = tuple(
 def is_same_path(file_path1, file_path2) -> bool:
     """Returns true if two paths are the same."""
     return os.path.normcase(os.path.normpath(file_path1)) == os.path.normcase(
-        os.path.normpath(file_path2)
+        os.path.normpath(file_path2),
     )
 
 
@@ -54,7 +55,7 @@ def is_stdlib_file(file_path) -> bool:
 class RunResult:
     """Object to hold result from running tool."""
 
-    def __init__(self, stdout: str, stderr: str):
+    def __init__(self, stdout: str, stderr: str) -> None:
         self.stdout: str = stdout
         self.stderr: str = stderr
 
@@ -64,7 +65,7 @@ class CustomIO(io.TextIOWrapper):
 
     name = None
 
-    def __init__(self, name, encoding="utf-8", newline=None):
+    def __init__(self, name, encoding="utf-8", newline=None) -> None:
         self._buffer = io.BytesIO()
         self._buffer.name = name
         super().__init__(self._buffer, encoding=encoding, newline=newline)
@@ -106,29 +107,28 @@ def change_cwd(new_cwd):
 
 
 def _run_module(
-    module: str, argv: Sequence[str], use_stdin: bool, source: str = None
+    module: str, argv: Sequence[str], use_stdin: bool, source: str = None,
 ) -> RunResult:
     """Runs as a module."""
     str_output = CustomIO("<stdout>", encoding="utf-8")
     str_error = CustomIO("<stderr>", encoding="utf-8")
 
-    with contextlib.suppress(SystemExit):
-        with substitute_attr(sys, "argv", argv):
-            with redirect_io("stdout", str_output):
-                with redirect_io("stderr", str_error):
-                    if use_stdin and source is not None:
-                        str_input = CustomIO("<stdin>", encoding="utf-8", newline="\n")
-                        with redirect_io("stdin", str_input):
-                            str_input.write(source)
-                            str_input.seek(0)
-                            runpy.run_module(module, run_name="__main__")
-                    else:
+    with contextlib.suppress(SystemExit), substitute_attr(sys, "argv", argv):
+        with redirect_io("stdout", str_output):
+            with redirect_io("stderr", str_error):
+                if use_stdin and source is not None:
+                    str_input = CustomIO("<stdin>", encoding="utf-8", newline="\n")
+                    with redirect_io("stdin", str_input):
+                        str_input.write(source)
+                        str_input.seek(0)
                         runpy.run_module(module, run_name="__main__")
+                else:
+                    runpy.run_module(module, run_name="__main__")
     return RunResult(str_output.get_value(), str_error.get_value())
 
 
 def run_module(
-    module: str, argv: Sequence[str], use_stdin: bool, cwd: str, source: str = None
+    module: str, argv: Sequence[str], use_stdin: bool, cwd: str, source: str = None,
 ) -> RunResult:
     """Runs as a module."""
     with CWD_LOCK:
@@ -139,7 +139,7 @@ def run_module(
 
 
 def run_path(
-    argv: Sequence[str], use_stdin: bool, cwd: str, source: str = None
+    argv: Sequence[str], use_stdin: bool, cwd: str, source: str = None,
 ) -> RunResult:
     """Runs as an executable."""
     if use_stdin:
@@ -156,8 +156,7 @@ def run_path(
         result = subprocess.run(
             argv,
             encoding="utf-8",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             check=False,
             cwd=cwd,
         )
@@ -188,16 +187,15 @@ def _run_api(
     str_output = CustomIO("<stdout>", encoding="utf-8")
     str_error = CustomIO("<stderr>", encoding="utf-8")
 
-    with contextlib.suppress(SystemExit):
-        with substitute_attr(sys, "argv", argv):
-            with redirect_io("stdout", str_output):
-                with redirect_io("stderr", str_error):
-                    if use_stdin and source is not None:
-                        str_input = CustomIO("<stdin>", encoding="utf-8", newline="\n")
-                        with redirect_io("stdin", str_input):
-                            str_input.write(source)
-                            str_input.seek(0)
-                            callback(argv, str_output, str_error, str_input)
-                    else:
-                        callback(argv, str_output, str_error)
+    with contextlib.suppress(SystemExit), substitute_attr(sys, "argv", argv):
+        with redirect_io("stdout", str_output):
+            with redirect_io("stderr", str_error):
+                if use_stdin and source is not None:
+                    str_input = CustomIO("<stdin>", encoding="utf-8", newline="\n")
+                    with redirect_io("stdin", str_input):
+                        str_input.write(source)
+                        str_input.seek(0)
+                        callback(argv, str_output, str_error, str_input)
+                else:
+                    callback(argv, str_output, str_error)
     return RunResult(str_output.get_value(), str_error.get_value())
