@@ -110,9 +110,9 @@ class JsonRpc:
         return self._reader.read()
 
 
-def create_json_rpc(self, writable: BinaryIO) -> JsonRpc:
+def create_json_rpc(readable: BinaryIO, writable: BinaryIO) -> JsonRpc:
     """Creates JSON-RPC wrapper for the readable and writable streams."""
-    return JsonRpc(self, writable)
+    return JsonRpc(readable, writable)
 
 
 class ProcessManager:
