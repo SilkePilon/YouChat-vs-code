@@ -49,32 +49,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     traceLog(`Module: ${serverInfo.module}`);
     traceVerbose(`Full Server Info: ${JSON.stringify(serverInfo)}`);
 
-    const runServer = async () => {
-        const interpreter = getInterpreterFromSetting(serverId);
-        if (interpreter && interpreter.length > 0 && checkVersion(await resolveInterpreter(interpreter))) {
-            traceVerbose(`Using interpreter from ${serverInfo.module}.interpreter: ${interpreter.join(' ')}`);
-            lsClient = await restartServer(serverId, serverName, outputChannel, lsClient);
-            return;
-        }
-
-        const interpreterDetails = await getInterpreterDetails();
-        if (interpreterDetails.path) {
-            traceVerbose(`Using interpreter from Python extension: ${interpreterDetails.path.join(' ')}`);
-            lsClient = await restartServer(serverId, serverName, outputChannel, lsClient);
-            return;
-        }
-
-        traceError(
-            'Python interpreter missing:\r\n' +
-                '[Option 1] Select python interpreter using the ms-python.python.\r\n' +
-                `[Option 2] Set an interpreter using "${serverId}.interpreter" setting.\r\n` +
-                'Please use Python 3.7 or greater.',
-        );
-    };
-
     const ask = async () => {
         const userInput = await vscode.window.showInputBox({
-            prompt: 'Enter a message to send to the BetterAPI:',
+            prompt: 'Enter a message for YouChat:',
             value: '',
         });
 
@@ -89,7 +66,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             return;
         }
 
-        const apiUrl = `https://api.betterapi.net/youdotcom/chat?message=${encodeURIComponent(userInput)}&key=site`;
+        const apiUrl = `https://api.betterapi.net/youdotcom/chat?message=${encodeURIComponent(
+            'dont reply with very long messages now: ',
+        )}${encodeURIComponent(userInput)}&key=site`;
 
         vscode.window.withProgress(
             {
@@ -103,7 +82,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     const response = await fetch(apiUrl);
                     const json = (await response.json()) as { message: string };
                     const message = json.message;
-                    vscode.window.showInformationMessage(message);
+                    const copyAction = { title: 'Copy code' };
+                    vscode.window.showInformationMessage(message, copyAction).then((selection) => {
+                        if (selection === copyAction) {
+                            const codeRegex = /```([\s\S]*)```/;
+                            const match = codeRegex.exec(message);
+                            if (match !== null) {
+                                const codeToCopy = match[1];
+                                vscode.env.clipboard.writeText(codeToCopy);
+                                vscode.window.showInformationMessage('Code copied to clipboard');
+                            }
+                        }
+                    });
                     progress.report({ increment: 100, message: 'API request successful' });
                 } catch (error) {
                     vscode.window.showErrorMessage((error as Error).message);
@@ -136,7 +126,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }
 
         const apiEndpoint = `https://api.betterapi.net/youdotcom/chat?message=${encodeURIComponent(
-            'refactor this code: ',
+            'dont reply with very long messages. refactor this code better and only return the new code: ',
         )}${encodeURIComponent(text)}&key=site`;
 
         // Show progress notification while waiting for API response
@@ -152,7 +142,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     const response = await fetch(apiEndpoint);
                     const json = (await response.json()) as { message: string };
                     const message = json.message;
-                    vscode.window.showInformationMessage(message);
+                    const copyAction = { title: 'Copy code' };
+                    vscode.window.showInformationMessage(message, copyAction).then((selection) => {
+                        if (selection === copyAction) {
+                            const codeRegex = /```([\s\S]*)```/;
+                            const match = codeRegex.exec(message);
+                            if (match !== null) {
+                                const codeToCopy = match[1];
+                                vscode.env.clipboard.writeText(codeToCopy);
+                                vscode.window.showInformationMessage('Code copied to clipboard');
+                            }
+                        }
+                    });
                     progress.report({ increment: 100, message: 'API request successful' });
                 } catch (error) {
                     vscode.window.showErrorMessage((error as Error).message);
@@ -163,17 +164,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     };
 
     context.subscriptions.push(
-        onDidChangePythonInterpreter(async () => {
-            await runServer();
-        }),
-        onDidChangeConfiguration(async (e: vscode.ConfigurationChangeEvent) => {
-            if (checkIfConfigurationChanged(e, serverId)) {
-                await runServer();
-            }
-        }),
-        registerCommand(`${serverId}.restart`, async () => {
-            await runServer();
-        }),
+        // onDidChangePythonInterpreter(async () => {
+        //     await runServer();
+        // }),
+        // onDidChangeConfiguration(async (e: vscode.ConfigurationChangeEvent) => {
+        //     if (checkIfConfigurationChanged(e, serverId)) {
+        //         await runServer();
+        //     }
+        // }),
+        // registerCommand(`${serverId}.restart`, async () => {
+        //     await runServer();
+        // }),
         registerCommand(`${serverId}.ask`, async () => {
             await ask();
         }),
@@ -182,16 +183,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }),
     );
 
-    setImmediate(async () => {
-        const interpreter = getInterpreterFromSetting(serverId);
-        if (interpreter === undefined || interpreter.length === 0) {
-            traceLog(`Python extension loading`);
-            await initializePython(context.subscriptions);
-            traceLog(`Python extension loaded`);
-        } else {
-            await runServer();
-        }
-    });
+    // setImmediate(async () => {
+    //     const interpreter = getInterpreterFromSetting(serverId);
+    //     if (interpreter === undefined || interpreter.length === 0) {
+    //         traceLog(`Python extension loading`);
+    //         await initializePython(context.subscriptions);
+    //         traceLog(`Python extension loaded`);
+    //     } else {
+    //         await runServer();
+    //     }
+    // });
 }
 
 export async function deactivate(): Promise<void> {

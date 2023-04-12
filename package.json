@@ -3,7 +3,7 @@
     "displayName": "YouChat",
     "description": "Extension that allows you to use You.com's YouChat inside VSCode (unofficial)",
     "icon": "images/youchat.png",
-    "version": "0.0.3",
+    "version": "0.0.5",
     "preview": true,
     "serverInfo": {
         "name": "YouChat",
@@ -135,7 +135,7 @@
                 "command": "youchat.ask"
             },
             {
-                "title": "Let YouChat refactor selected",
+                "title": "YouChat: optimize selected code",
                 "category": "YouChat",
                 "command": "youchat.sendSelectedTextToAPICommand"
             }
