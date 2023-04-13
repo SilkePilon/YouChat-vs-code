@@ -28,21 +28,18 @@ const extensionConfig = {
         extensions: ['.ts', '.js'],
     },
     module: {
-        rules: [
-            {
-                test: /\.ts$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'ts-loader',
-                    },
-                ],
-            },
-        ],
+        rules: [{
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            use: [{
+                loader: 'ts-loader',
+            }, ],
+        }, ],
     },
     devtool: 'source-map',
     infrastructureLogging: {
         level: 'log', // enables logging required for problem matchers
     },
+
 };
 module.exports = [extensionConfig];
