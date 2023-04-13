@@ -16,7 +16,7 @@ SERVER_INFO = utils.get_server_info_defaults()
 TIMEOUT = 10  # 10 seconds
 
 
-def test_linting_example():
+def test_linting_example() -> None:
     """Test to linting on file open."""
     contents = TEST_FILE_PATH.read_text()
 
@@ -26,7 +26,7 @@ def test_linting_example():
 
         done = Event()
 
-        def _handler(params):
+        def _handler(params: dict) -> None:
             nonlocal actual
             actual = params
             done.set()
@@ -93,7 +93,7 @@ def test_linting_example():
     assert_that(actual, is_(expected))
 
 
-def test_formatting_example():
+def test_formatting_example() -> None:
     """Test formatting a python file."""
     FORMATTED_TEST_FILE_PATH = constants.TEST_DATA / "sample1" / "sample.py"
     UNFORMATTED_TEST_FILE_PATH = constants.TEST_DATA / "sample1" / "sample.unformatted"
