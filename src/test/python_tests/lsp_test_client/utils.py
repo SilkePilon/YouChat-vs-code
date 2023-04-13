@@ -25,7 +25,7 @@ def as_uri(path: str) -> str:
 class PythonFile:
     """Create python file on demand for testing."""
 
-    def __init__(self, contents, root) -> None:
+    def __init__(self, contents: str, root: str) -> None:
         self.contents = contents
         self.basename = "".join(
             choice("abcdefghijklmnopqrstuvwxyz") if i < 8 else ".py" for i in range(9)
@@ -38,19 +38,19 @@ class PythonFile:
             py_file.write(self.contents)
         return self
 
-    def __exit__(self, typ, value, _tb):
+    def __exit__(self, typ, value, _tb) -> None:
         """Cleans up and deletes the python file."""
         os.unlink(self.fullpath)
 
 
-def get_server_info_defaults():
+def get_server_info_defaults() -> dict:
     """Returns server info from package.json"""
     package_json_path = PROJECT_ROOT / "package.json"
     package_json = json.loads(package_json_path.read_text())
     return package_json["serverInfo"]
 
 
-def get_initialization_options():
+def get_initialization_options() -> dict[str, list[dict]]:
     """Returns initialization options from package.json"""
     package_json_path = PROJECT_ROOT / "package.json"
     package_json = json.loads(package_json_path.read_text())
