@@ -126,7 +126,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         }
 
         const apiEndpoint = `https://api.betterapi.net/youdotcom/chat?message=${encodeURIComponent(
-            'dont reply with very long messages. refactor this code better and only return the new code: ',
+            "Don't reply with very long messages. Refactor this code to make it better and return only the new code: ",
         )}${encodeURIComponent(text)}&key=site`;
 
         // Show progress notification while waiting for API response
