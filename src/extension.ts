@@ -17,7 +17,8 @@ import { loadServerDefaults } from './common/setup';
 import { getLSClientTraceLevel } from './common/utilities';
 import { createOutputChannel, onDidChangeConfiguration, registerCommand } from './common/vscodeapi';
 import fetch from 'node-fetch';
-
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
 let lsClient: LanguageClient | undefined;
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     // This is required to get server name and module. This should be
@@ -80,8 +81,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 progress.report({ increment: 0 });
                 try {
                     const response = await fetch(apiUrl);
-                    const json = (await response.json()) as { message: string };
-                    const {message} = json;
+                    const html = await response.text();
+                    const dom = new JSDOM(html);
+                    const json = JSON.parse(dom.window.document.body.textContent);
+                    const { message } = json;
                     const copyAction = { title: 'Copy code' };
                     vscode.window.showInformationMessage(message, copyAction).then((selection) => {
                         if (selection === copyAction) {
@@ -111,7 +114,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             return;
         }
 
-        const {selection} = editor;
+        const { selection } = editor;
         if (selection.isEmpty) {
             vscode.window.showErrorMessage('No text selected');
             return;
@@ -140,8 +143,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 progress.report({ increment: 0 });
                 try {
                     const response = await fetch(apiEndpoint);
-                    const json = (await response.json()) as { message: string };
-                    const {message} = json;
+                    const html = await response.text();
+                    const dom = new JSDOM(html);
+                    const json = JSON.parse(dom.window.document.body.textContent);
+                    const { message } = json;
                     const copyAction = { title: 'Copy code' };
                     vscode.window.showInformationMessage(message, copyAction).then((selection) => {
                         if (selection === copyAction) {

@@ -59,11 +59,13 @@
     },
     "contributes": {
         "menus": {
-            "editor/context": [{
-                "when": "editorHasSelection",
-                "command": "youchat.sendSelectedTextToAPICommand",
-                "group": "navigation"
-            }]
+            "editor/context": [
+                {
+                    "when": "editorHasSelection",
+                    "command": "youchat.sendSelectedTextToAPICommand",
+                    "group": "navigation"
+                }
+            ]
         },
         "configuration": {
             "properties": {
@@ -128,7 +130,8 @@
                 }
             }
         },
-        "commands": [{
+        "commands": [
+            {
                 "title": "Talk to YouChat",
                 "category": "YouChat",
                 "command": "youchat.ask"
@@ -142,6 +145,7 @@
     },
     "dependencies": {
         "fs-extra": "^11.1.0",
+        "jsdom": "^21.1.1",
         "node-fetch": "^3.3.1",
         "vscode-languageclient": "^8.1.0"
     },
