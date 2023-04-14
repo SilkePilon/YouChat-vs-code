@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/SilkePilon/YouChat-vs-code/"><img src="https://github.com/SilkePilon/YouChat-vs-code/blob/main/images/youchat.svg" alt="YouChat" width="200"></a>
+  <a href="https://github.com/SilkePilon/YouChat-vs-code/"><img src="https://github.com/SilkePilon/YouChat-vs-code/blob/main/images/youchat-200.png" alt="YouChat" width="200"></a>
   <br>
   <br>
   YouChat for VSCode
