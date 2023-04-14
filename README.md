@@ -53,17 +53,17 @@ We hope you enjoy using the YouChat extension and all of the features it has to 
 ## How To Use
 Here is a step-by-step guide on how to use the YouChat extension in VS Code:
 
-Install the YouChat extension from the VS Code Marketplace and reload your editor.
+1. Install the YouChat extension from the VS Code Marketplace and reload your editor.
 
-In the editor, select a piece of code that you want to optimize or explain.
+2. In the editor, select a piece of code that you want to optimize or explain.
 
-Right-click on the selected text to open the context menu and look for the "Talk to YouChat" option. Alternatively, you can use the keyboard shortcut (Ctrl+Shift+P on Windows or Command+Shift+P on Mac) and type "YouChat" to access the extension commands.
+3. Right-click on the selected text to open the context menu and look for the "Talk to YouChat" option. Alternatively, you can use the keyboard shortcut (Ctrl+Shift+P on Windows or Command+Shift+P on Mac) and type "YouChat" to access the extension commands.
 
-Click on the "Talk to YouChat" option to start a conversation with YouChat. You can ask any question related to the selected code or use any other functionality provided by YouChat.
+4. Click on the "Talk to YouChat" option to start a conversation with YouChat. You can ask any question related to the selected code or use any other functionality provided by YouChat.
 
-To optimize the selected code, right-click on the selected text and choose the "YouChat: optimize selected code" option from the context menu. You can also use the keyboard shortcut (Ctrl+Shift+O on Windows or Command+Shift+O on Mac) to optimize the code directly.
+5. To optimize the selected code, right-click on the selected text and choose the "YouChat: optimize selected code" option from the context menu. You can also use the keyboard shortcut (Ctrl+Shift+O on Windows or Command+Shift+O on Mac) to optimize the code directly.
 
-To explain the selected code, right-click on the selected text and choose the "YouChat: explain selected code" option from the context menu. You can also use the keyboard shortcut (Ctrl+Shift+E on Windows or Command+Shift+E on Mac) to get an explanation of the code directly.
+6. To explain the selected code, right-click on the selected text and choose the "YouChat: explain selected code" option from the context menu. You can also use the keyboard shortcut (Ctrl+Shift+E on Windows or Command+Shift+E on Mac) to get an explanation of the code directly.
 
 That's it! You are now ready to use the YouChat extension to streamline your workflow and improve your coding experience.
 
