@@ -27,7 +27,6 @@
   <a href="#about">About</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#how-to-install">Install</a> •
   <a href="#credits">Credits</a> •
   <a href="#license">License</a>
 </p>
@@ -35,49 +34,20 @@
 <!-- ![screenshot](https://raw.githubusercontent.com/SilkePilon/youdotcom/main/assets/images/YouDotCom.jpg) -->
 
 ## About
-Welcome to the YouDotCom Python Library!
+Introducing YouChat, the VS Code extension that enables users to interact with YouChat directly from within the code editor. YouChat offers a plethora of functionalities, including debugging code, refactoring code, answering questions, and much more.
 
-This library allows users to easily access and utilize all of the functionality of the You.com platform through a simple and intuitive Python interface. With the library, users can access a variety of You.com apps and services, including but not limited to:
+With YouChat, users can access a wide range of features and services provided by You.com, all via a simple and user-friendly interface. The extension is designed to streamline your workflow and save you time by allowing you to access YouChat without leaving your code editor.
 
-* Search
-* YouChat
-* YouCode
-* YouWrite
+To get started with YouChat, simply download the extension from the VS Code Marketplace and install it in your editor. Once installed, you can easily access YouChat by clicking on the YouChat icon in the sidebar or pressing CTRL + SHIFT + P.
 
-To get started with the YouDotCom Python Library, simply <a href="#install">install</a> the package using pip and import it into your Python script. From there, you can use the provided functions and classes to easily interact with the You.com platform.
-
-We hope you enjoy using the YouDotCom Python Library and all of the features it has to offer!
-> by Chat GPT
+We hope you enjoy using the YouChat extension and all of the features it has to offer. Happy coding!
 
 
 ## Key Features
-* Bypass CloudFlare
+* Ask questions
 * Interact with YouChat
-* Find code examples
-* Server ready
-  - Supports non-gui operating systems.
-* Cross platform
-  - Windows, macOS and Linux ready.
-
-
-## How to install
-
-To install the YouDotCom Python Library, use the following command:
-
-```
-pip install youdotcom
-```
-This will install the latest version of the youdotcom package. Always make sure to be up-to-date so you don't miss any features, use:
-
-```
-pip install youdotcom --upgrade
-```
-
-Once the installation is complete, you can use the youdotcom package in your Python scripts by importing it:
-
-```python
-import youdotcom
-```
+* Recaftor code
+* Find documentation
 
 
 ## How To Use
