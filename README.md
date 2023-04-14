@@ -75,21 +75,10 @@ That's it! You are now ready to use the YouChat extension to streamline your wor
 
 
 
-
-## YouDotCom projects!
-- [telegram bot](https://github.com/samezarus/you_telegram_bot)
-
-
-
 ## Discord
-In addition to the YouDotCom Python Library, we also have an active [Discord server](https://discord.gg/SD7wZMFSvV) where you can chat with developers and get help with using the library. Our Discord community is a great place to ask questions, share your projects, and get feedback from other developers.
+In addition to the exstention, we also have an active [Discord server](https://discord.gg/SD7wZMFSvV) where you can chat with developers and get help with using the exstention. Our Discord community is a great place to ask questions, share your projects, and get feedback from other developers.
 
 
-## Credits
-
-This software uses the following open source packages:
-
-- [undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver)
 
 
 ## License
