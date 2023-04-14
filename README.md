@@ -47,13 +47,13 @@ Here is a step-by-step guide on how to use the YouChat extension in VS Code:
 
 1. Install the YouChat extension from the VS Code Marketplace and reload your editor.
 
-3. Use the keyboard shortcut (Ctrl+Shift+P on Windows or Command+Shift+P on Mac) and type "YouChat" to access the extension commands.
+2. Use the keyboard shortcut (Ctrl+Shift+P on Windows or Command+Shift+P on Mac) and type "YouChat" to access the extension commands.
 
-4. Click on the "Talk to YouChat" option to start a conversation with YouChat. You can ask any question or use any other functionality provided by YouChat.
+3. Click on the "Talk to YouChat" option to start a conversation with YouChat. You can ask any question or use any other functionality provided by YouChat.
 
-5. To optimize the selected code, right-click on the selected text and choose the "YouChat: optimize selected code" option from the context menu.
+4. To optimize the selected code, right-click on the selected text and choose the "YouChat: optimize selected code" option from the context menu.
 
-6. To explain the selected code, right-click on the selected text and choose the "YouChat: explain selected code" option from the context menu. 
+5. To explain the selected code, right-click on the selected text and choose the "YouChat: explain selected code" option from the context menu. 
 
 That's it! You are now ready to use the YouChat extension to streamline your workflow and improve your coding experience.
 
