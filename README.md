@@ -4,7 +4,7 @@
   <br>
 </h1>
 
-<h4 align="center"><strong>Extension that allows you to use <a href="http://you.com/" target="_blank">you.com</a>'s YouChat inside VSCode (unofficial)and all of its apps.</strong></h4>
+<h4 align="center"><strong>Extension that allows you to use <a href="http://you.com/" target="_blank">you.com</a>'s YouChat inside VSCode (unofficial)</strong></h4>
 
 <div align="center">
 
