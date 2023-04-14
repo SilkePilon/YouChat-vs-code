@@ -67,93 +67,11 @@ To explain the selected code, right-click on the selected text and choose the "Y
 
 That's it! You are now ready to use the YouChat extension to streamline your workflow and improve your coding experience.
 
-## API
-
-> **Note**
-> The request limit is 15 per minute.
-
-Welcome to the YouDotCom Python library! Our library now features an easy-to-use public API that allows you to interact with YouChat. With this API, you can easily integrate YouChat into your own projects and applications, providing a convenient and user-friendly way for you to access and utilize the capabilities of the chat bot.
-
-To get started, you will first need to get an API key on our [website](https://betterapi.net/). This key will be required to authenticate each API request.
-
-base url: `api.betterapi.net`
-
-To send a message to YouChat and receive a JSON response, you can make an HTTP GET request to the endpoint `/youdotcom/chat`, including the message to be sent as a query parameter. The key is `message` and the value should be the message text encoded in URL format. For example, to send the message `hello there`, the endpoint would be `https://api.betterapi.net/youdotcom/chat?message=hello%20there&key=YOUR_API_KEY`. The JSON response will include the message sent by YouChat, time, v2Captcha, and type of the request.
-
-You also need to set your API key, you can do this by providing it as an parameter like this `/youdotcom/chat?message=hello%20there&key=YOUR_API_KEY`
 
 
-auto updating docs can be found at: https://betterapi.net/redoc
-
-Make sure to include the API key in the url of each request to authenticate it.
-
-We are constantly improving and updating the YouDotCom library and API, so make sure to check back for new features and updates. If you have any questions or need assistance, feel free to reach out in the Discusions tab. I'm always happy to help.
-
-## Discord bot
-```python
-from typing import Optional
-
-import discord
-from discord import app_commands
-
-
-MY_GUILD = discord.Object(id=0)  # replace with your guild id
-
-
-class MyClient(discord.Client):
-    def __init__(self, *, intents: discord.Intents):
-        super().__init__(intents=intents)
-        # A CommandTree is a special type that holds all the application command
-        # state required to make it work. This is a separate class because it
-        # allows all the extra state to be opt-in.
-        # Whenever you want to work with application commands, your tree is used
-        # to store and work with them.
-        # Note: When using commands.Bot instead of discord.Client, the bot will
-        # maintain its own tree instead.
-        self.tree = app_commands.CommandTree(self)
-
-    # In this basic example, we just synchronize the app commands to one guild.
-    # Instead of specifying a guild to every command, we copy over our global commands instead.
-    # By doing so, we don't have to wait up to an hour until they are shown to the end-user.
-    async def setup_hook(self):
-        # This copies the global commands over to your guild.
-        self.tree.copy_global_to(guild=MY_GUILD)
-        await self.tree.sync(guild=MY_GUILD)
-
-
-intents = discord.Intents.default()
-client = MyClient(intents=intents)
-betterapi_token = "YOUR API KEY HERE"
-
-@client.event
-async def on_ready():
-    print(f'Logged in as {client.user} (ID: {client.user.id})')
-    print('------')
-
-
-@client.tree.command()
-@app_commands.describe(message='The message to YouChat')
-async def joined(interaction: discord.Interaction, message:str = "hi there"):
-    """Send a message to YouChat"""
-    await interaction.response.defer()
-    data = requests.get(f"https://api.betterapi.net/youdotcom/chat?message={message}&key={betterapi_token}").json()
-    try: 
-        msg = data['message']
-    except:
-        msg = "got an error!"
-    await interaction.followup.send(f"{msg}")
-
-client.run('token')
-```
-
-
-## YouDotCom roadmap
-* [x] add youchat
-* [x] add youcode
-* [ ] swith to using you.com/api
-* [ ] make code faster
-* [ ] add code translate 
-* [ ] add all of you.com apps
+## YouChat roadmap
+* [x] SOON
+* [x] SOON
 
 
 
