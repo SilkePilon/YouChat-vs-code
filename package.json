@@ -140,12 +140,12 @@
                 "command": "youchat.ask"
             },
             {
-                "title": "YouChat: optimize selected code",
+                "title": "YouChat: Optimize Selected Code",
                 "category": "YouChat",
                 "command": "youchat.sendSelectedTextToAPICommand"
             },
             {
-                "title": "YouChat: explain selected code",
+                "title": "YouChat: Explain Selected Code",
                 "category": "YouChat",
                 "command": "youchat.explaincode"
             }
