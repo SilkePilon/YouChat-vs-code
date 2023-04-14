@@ -3,7 +3,7 @@
     "displayName": "YouChat",
     "description": "Extension that allows you to use You.com's YouChat inside VSCode (unofficial)",
     "icon": "images/youchat.png",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "preview": true,
     "serverInfo": {
         "name": "YouChat",
