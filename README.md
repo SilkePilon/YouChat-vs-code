@@ -3,11 +3,11 @@
   <a href="https://github.com/SilkePilon/youdotcom/"><img src="https://github.com/SilkePilon/youdotcom/blob/main/youdotcom.png?raw=true" alt="YouDotCom" width="200"></a>
   <br>
   <br>
-  YouDotCom for python v2.0.23
+  YouChat for VSCode
   <br>
 </h1>
 
-<h4 align="center">An python library for <a href="http://you.com/" target="_blank">you.com</a> and all of its apps.</h4>
+<h4 align="center">Extension that allows you to use <a href="http://you.com/" target="_blank">you.com</a>'s YouChat inside VSCode (unofficial)and all of its apps.</h4>
 
 <div align="center">
 
