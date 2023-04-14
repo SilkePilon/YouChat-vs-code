@@ -3,7 +3,7 @@
     "displayName": "YouChat",
     "description": "Extension that allows you to use You.com's YouChat inside VSCode (unofficial)",
     "icon": "images/youchat.png",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "preview": true,
     "serverInfo": {
         "name": "YouChat",
@@ -59,8 +59,7 @@
     },
     "contributes": {
         "menus": {
-            "editor/context": [
-                {
+            "editor/context": [{
                     "when": "editorHasSelection",
                     "command": "youchat.sendSelectedTextToAPICommand",
                     "group": "navigation"
@@ -135,8 +134,7 @@
                 }
             }
         },
-        "commands": [
-            {
+        "commands": [{
                 "title": "Talk to YouChat",
                 "category": "YouChat",
                 "command": "youchat.ask"
